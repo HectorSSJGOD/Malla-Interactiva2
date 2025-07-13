@@ -96,6 +96,21 @@ p {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Nuevo estilo para ramos bloqueados */
+.course.locked {
+    background-color: #f5f5f5; /* Un gris muy claro */
+    border-color: #e0e0e0; /* Borde gris claro */
+    color: #a0a0a0; /* Texto gris más claro */
+    cursor: not-allowed; /* Indica que no se puede hacer clic */
+    opacity: 0.6; /* Un poco de transparencia */
+}
+
+.course.locked:hover {
+    background-color: #f5f5f5; /* No cambia al pasar el mouse si está bloqueado */
+    border-color: #e0e0e0;
+    box-shadow: none; /* Sin sombra al pasar el mouse */
+}
+
 .course.completed {
     background-color: #a5d6a7; /* Verde más intenso para completado */
     border-color: #4caf50; /* Verde aún más intenso */
