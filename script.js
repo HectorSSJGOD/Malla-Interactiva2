@@ -27,10 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCourseVisualState(courseElement) {
         if (isCourseUnlocked(courseElement)) {
             courseElement.classList.remove('locked');
-            // Si estaba bloqueado y ahora se desbloquea, pero no está marcado como completado, restauramos su estilo normal
+            // Si el ramo no está en el Set de completados (es decir, no debería estar marcado)
             if (!isCourseCompleted(courseElement.dataset.courseId)) {
-                // Asegúrate de remover la clase 'completed' si el ramo no está en el Set de completados
-                courseElement.classList.remove('completed'); 
+                courseElement.classList.remove('completed'); // Asegúrate de que NO tenga la clase 'completed'
             }
         } else {
             // Si está bloqueado, asegúrate de que no esté marcado como completado y añade la clase 'locked'
@@ -43,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Función para actualizar el estado de TODOS los ramos
-    function updateAllCourseStates() {
-        // Primero, reconstruimos el Set de ramos completados desde localStorage
+    function updateAllCourseStates(resetting = false) { // Añadimos un parámetro para saber si estamos reseteando
+        // PASO 1: Reconstruir el Set de ramos completados desde localStorage
         completedCourses.clear();
         courses.forEach(course => {
             const courseId = course.dataset.courseId;
@@ -53,20 +52,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Luego, aplicamos los estados visuales (completado y bloqueado)
+        // PASO 2: Iterar sobre todos los ramos para aplicar/remover clases
         courses.forEach(course => {
             const courseId = course.dataset.courseId;
 
-            if (isCourseCompleted(courseId)) {
-                // Si el ramo está completado, simplemente asegúrate de que tenga la clase 'completed' y no 'locked'
+            if (resetting) {
+                // Si estamos en modo reseteo, forzamos la remoción de 'completed'
+                course.classList.remove('completed');
+                // Esto es crucial para la visualización del reset
+            } else if (isCourseCompleted(courseId)) {
+                // Si no estamos reseteando y el ramo está en completedCourses, asegúrate que tenga 'completed'
                 course.classList.add('completed');
-                course.classList.remove('locked');
             } else {
-                // Si no está completado, aseguramos que la clase 'completed' sea removida
+                // Si no está en completedCourses, asegúrate de que NO tenga 'completed'
                 course.classList.remove('completed'); 
-                // Y luego decidimos si está bloqueado o desbloqueado
-                updateCourseVisualState(course);
             }
+            
+            // PASO 3: Después de manejar 'completed', actualiza el estado de bloqueo
+            updateCourseVisualState(course);
         });
     }
 
@@ -79,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem(courseId);
             completedCourses.delete(courseId); // Eliminar del Set global
         }
-        updateAllCourseStates(); // Volver a verificar todos los estados después de un cambio
+        updateAllCourseStates(); // Volver a verificar todos los estados después de un cambio (sin reseteo)
     }
 
     // Event listener para cada ramo
@@ -92,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isCompleted = course.classList.toggle('completed');
                 saveCourseState(courseId, isCompleted);
             } else {
-                // Opcional: Dar feedback al usuario si intenta clickear un ramo bloqueado
                 alert('¡Este ramo está bloqueado! Debes aprobar sus prerrequisitos primero.');
             }
         });
@@ -101,12 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event listener para el botón de restablecer
     resetButton.addEventListener('click', () => {
         if (confirm('¿Estás seguro de que quieres restablecer todos los ramos? Esto borrará tu progreso.')) {
-            localStorage.clear();
-            updateAllCourseStates(); // Recarga y recalcula todos los estados
+            localStorage.clear(); // Borra todo el localStorage
+            // Llamamos a updateAllCourseStates con 'true' para indicar que estamos reseteando
+            updateAllCourseStates(true); 
             alert('¡Malla restablecida! Todos los ramos han sido desmarcados y bloqueados según sus prerrequisitos.');
         }
     });
 
     // Cargar los estados iniciales de los ramos cuando la página se carga
-    updateAllCourseStates();
+    updateAllCourseStates(); // Primera carga (sin reseteo)
 });
