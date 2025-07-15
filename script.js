@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const courses = document.querySelectorAll('.course');
-    const semesters = document.querySelectorAll('.semester'); // Seleccionamos todos los semestres
+    const semesters = document.querySelectorAll('.semester');
     const resetButton = document.getElementById('resetButton');
-    const mallaGridContainer = document.querySelector('.malla-grid-container'); // El contenedor que haremos scroll
+    
+    // CAMBIO CLAVE AQUÍ: Aseguramos que 'mallaGridContainer' sea el elemento que realmente tiene el overflow-x
+    // Es el '.container' el que tiene 'overflow-x: auto;' en nuestro CSS.
+    const scrollContainer = document.querySelector('.container'); 
 
     let completedCourses = new Set();
 
@@ -36,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Función para desplazar la malla horizontalmente
     function scrollToCurrentProgress() {
-        if (!mallaGridContainer) return; // Asegúrate de que el contenedor exista
+        if (!scrollContainer) return; // Asegúrate de que el contenedor de scroll exista
 
         let lastCompletedSemesterIndex = -1;
 
@@ -50,24 +53,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Si hay ramos completados y es un semestre posterior al primero
-        if (lastCompletedSemesterIndex > 0) {
+        if (lastCompletedSemesterIndex > -1) { // Cambiado a -1 para incluir el semestre 0 si tiene ramos
             const targetSemester = semesters[lastCompletedSemesterIndex];
-            const semesterOffsetLeft = targetSemester.offsetLeft;
-            const containerScrollLeft = mallaGridContainer.scrollLeft;
-            const containerWidth = mallaGridContainer.offsetWidth;
-
-            // Calculamos la posición para que el semestre esté visible o cerca del centro
-            // Ajustamos el desplazamiento para que el semestre quede más o menos en el centro de la vista
-            // o al menos completamente visible si es uno de los primeros
-            const scrollPosition = semesterOffsetLeft - (containerWidth / 4); // Desplazarlo un cuarto de pantalla desde la izquierda
             
-            mallaGridContainer.scrollTo({
+            // Calculamos la posición del semestre relativo al contenedor de scroll
+            // .offsetLeft da la posición relativa al offsetParent más cercano.
+            // .scrollLeft del contenedor es su posición actual.
+            // Para centrar el elemento, restamos la mitad del ancho del contenedor y la mitad del ancho del elemento.
+            const semesterPositionInContainer = targetSemester.offsetLeft - scrollContainer.offsetLeft; // Posición relativa dentro del contenedor scrollable
+            const scrollOffset = (scrollContainer.offsetWidth - targetSemester.offsetWidth) / 2; // Offset para centrar
+
+            let scrollPosition = semesterPositionInContainer - scrollOffset;
+            
+            // Asegurarse de no hacer scroll más allá del inicio (0)
+            if (scrollPosition < 0) {
+                scrollPosition = 0;
+            }
+
+            scrollContainer.scrollTo({
                 left: scrollPosition,
-                behavior: 'smooth' // Desplazamiento suave
+                behavior: 'smooth'
             });
-        } else if (lastCompletedSemesterIndex === -1 && mallaGridContainer.scrollLeft > 0) {
-            // Si no hay ramos completados (o se resetearon), volvemos al inicio
-            mallaGridContainer.scrollTo({
+        } else if (scrollContainer.scrollLeft > 0) {
+            // Si no hay ramos completados, volvemos al inicio solo si no estamos ya al inicio
+            scrollContainer.scrollTo({
                 left: 0,
                 behavior: 'smooth'
             });
@@ -95,8 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCourseVisualState(course);
         });
 
-        // Llamamos a la función de desplazamiento después de actualizar todos los estados
-        scrollToCurrentProgress(); 
+        scrollToCurrentProgress(); // Llamamos a la función de desplazamiento después de actualizar todos los estados
     }
 
     // Función para guardar el estado de un ramo en localStorage
@@ -108,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem(courseId);
             completedCourses.delete(courseId);
         }
-        updateAllCourseStates(); // Se llama sin el parámetro 'resetting'
+        updateAllCourseStates();
     }
 
     // Event listeners
@@ -126,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetButton.addEventListener('click', () => {
         if (confirm('¿Estás seguro de que quieres restablecer todos los ramos? Esto borrará tu progreso.')) {
             localStorage.clear();
-            updateAllCourseStates(true); // Llamamos con 'true' para forzar el reseteo visual
+            updateAllCourseStates(true);
             alert('¡Malla restablecida! Todos los ramos han sido desmarcados y bloqueados según sus prerrequisitos.');
         }
     });
