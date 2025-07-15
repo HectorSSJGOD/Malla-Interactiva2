@@ -162,6 +162,8 @@ p {
 
 /* --- ESTILOS RESPONSIVOS --- */
 
+/* ... (Todo tu CSS anterior permanece igual hasta las media queries) ... */
+
 /* Pantallas grandes y medianas (desktop y tablets grandes en horizontal) */
 @media (max-width: 1200px) {
     .malla-grid-container {
@@ -181,33 +183,26 @@ p {
 /* Pantallas de móviles (768px y abajo) */
 @media (max-width: 768px) {
     body {
-        padding: 0; /* Quita el padding del body en móvil para que el container use todo el espacio */
-        display: block; /* Vuelve a un display de bloque normal para el body */
+        padding: 0;
+        display: block;
         min-height: auto;
-        overflow-y: hidden; /* El body no debe tener scroll */
+        overflow-y: hidden;
     }
 
     .container {
-        padding: 15px; /* Padding interno del contenedor para móvil */
-        overflow-x: hidden; /* Oculta el scroll horizontal en móviles */
-        overflow-y: auto;   /* ¡CRÍTICO! HABILITA el scroll vertical en móviles */
-        white-space: normal; /* Permite que el texto se envuelva y el contenido se apile verticalmente */
-        
-        /* ¡LAS REGLAS CLAVE PARA EL SCROLL VERTICAL AQUI! */
-        /* Eliminamos 'height: auto;' y nos basamos en max-height para forzar el scroll */
-        max-height: 100vh; /* ¡CRÍTICO! El contenedor ocupa la altura máxima de la ventana */
-        
-        /* Ajusta este valor si tienes un header o footer que reduce el espacio */
-        /* Por ejemplo, si tienes un header de 50px y un footer de 30px: calc(100vh - 80px) */
-
-        margin: 0; /* Asegura que no haya márgenes que resten de 100vh */
-        width: 100%; /* Asegura que ocupe todo el ancho */
-        border-radius: 0; /* Opcional: bordes cuadrados para ocupar más pantalla */
-        box-shadow: none; /* Opcional: elimina sombra para móvil */
+        padding: 15px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        white-space: normal;
+        max-height: 100vh; /* Se mantiene la altura máxima para forzar el scroll */
+        margin: 0 auto;
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     .malla-grid-container {
-        display: block; /* Vuelve a un display de bloque normal para los semestres */
+        display: block;
         grid-template-columns: 1fr;
         gap: 0;
         min-width: auto;
@@ -229,9 +224,14 @@ p {
     h2 {
         font-size: 1.4em;
     }
-    /* Mueve el padding del body a un nuevo div interior o al mismo container */
+    
+    /* AJUSTE CLAVE AQUÍ PARA EL BOTÓN DE RESET */
     #resetButton {
-        margin-top: 20px; /* Reducir margen superior del botón en móvil */
+        margin-top: 30px; /* Reducir el margen superior si es muy grande */
+        margin-bottom: 80px; /* ¡AUMENTAR ESTE MARGEN para separarlo de la barra del navegador! */
+        padding: 12px 25px; /* Mantener padding */
+        font-size: 1em; /* Mantener tamaño de fuente */
+        /* Asegurarse de que display: block y width: auto sigan activos de las reglas generales */
     }
 }
 
@@ -241,7 +241,7 @@ p {
     }
     .container {
         padding: 10px;
-        max-height: 100vh; /* Se mantiene 100vh */
+        max-height: 100vh;
     }
     h1 {
         font-size: 1.5em;
@@ -254,8 +254,8 @@ p {
         min-height: 50px;
         font-size: 0.9em;
     }
+    /* AJUSTE ADICIONAL PARA PANTALLAS MÁS PEQUEÑAS AÚN */
     #resetButton {
-        padding: 10px 20px;
-        font-size: 0.9em;
+        margin-bottom: 80px; /* Mantener o ajustar si es necesario para pantallas ultrapequeñas */
     }
 }
