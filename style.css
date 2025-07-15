@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #e0e0e0; /* Gris claro cálido como fondo general */
+    background-color: #e0e0e0; /* Fondo general similar al anterior */
     color: #333;
     display: flex;
     justify-content: center;
@@ -15,115 +15,116 @@ body {
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 100%; /* Ajustamos el max-width para permitir la expansión horizontal */
+    max-width: 100%;
     width: 100%;
     box-sizing: border-box;
-    overflow-x: auto; /* Permite scroll horizontal si la malla es muy ancha */
+    overflow-x: auto; /* Permite scroll horizontal */
     white-space: nowrap; /* Evita que los semestres se rompan a la siguiente línea */
 }
 
-h1, h2 {
-    color: #1e88e5; /* Azul más vivo pero no fosforescente */
+h1, p {
+    color: #77BEF0; /* Azul Claro Vibrante para títulos principales */
     text-align: center;
     margin-bottom: 20px;
+    white-space: normal;
 }
 
 p {
-    text-align: center;
     margin-bottom: 30px;
-    color: #555; /* Gris un poco más oscuro para el texto general */
+    color: #555;
 }
 
 /* Estilos para el contenedor de la malla horizontal */
 .malla-grid-container {
     display: grid;
-    /* Define 10 columnas, una para cada semestre. Cada columna tendrá el tamaño de su contenido (min-content) o un mínimo de 250px. */
     grid-template-columns: repeat(10, minmax(220px, 1fr)); 
-    gap: 20px; /* Espacio entre los semestres */
-    padding-bottom: 20px; /* Espacio debajo de la malla si hay scroll */
-    min-width: fit-content; /* Asegura que el contenedor de la malla sea tan ancho como sus columnas */
+    gap: 20px;
+    padding-bottom: 20px;
+    min-width: fit-content;
+    align-items: start;
+    scroll-behavior: smooth; /* Para el desplazamiento suave */
 }
 
 .semester {
-    /* Eliminamos float y display:inline-block si los hubo antes. Grid gestiona el layout */
-    margin-bottom: 0; /* No necesitamos margen inferior entre semestres */
+    margin-bottom: 0;
     padding: 20px;
-    border: 1px solid #b3e5fc; /* Borde azul claro */
+    border: 1px solid #77BEF0; /* Borde con Azul Claro Vibrante */
     border-radius: 6px;
-    background-color: #e3f2fd; /* Fondo azul muy claro para los semestres */
-    display: flex; /* Usamos flexbox para organizar los ramos verticalmente dentro de cada semestre */
-    flex-direction: column; /* Apila los ramos verticalmente */
-    align-items: stretch; /* Estira los ramos para que tengan el mismo ancho */
-    flex-shrink: 0; /* Evita que los semestres se encojan en pantallas pequeñas */
+    background-color: rgba(119, 190, 240, 0.1); /* Fondo muy suave del azul vibrante */
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    height: 100%;
 }
 
 .semester h2 {
-    color: #1565c0; /* Azul más oscuro para el título del semestre */
+    color: #77BEF0; /* Azul Claro Vibrante para el título del semestre */
     margin-top: 0;
     margin-bottom: 25px;
-    border-bottom: 2px solid #90caf9;
+    border-bottom: 2px solid rgba(119, 190, 240, 0.5); /* Borde inferior más suave */
     padding-bottom: 10px;
-    text-align: center; /* Centramos el título del semestre */
-    white-space: normal; /* Permite que el texto del título se envuelva */
+    text-align: center;
+    white-space: normal;
 }
 
 .course {
-    background-color: #f1f8e9; /* Verde muy claro y suave como base */
-    border: 1px solid #c8e6c9; /* Borde verde claro */
+    background-color: #FFCB61; /* Naranja Suave/Amarillo Cálido como base */
+    border: 1px solid #FFCB61; /* Borde del mismo color */
     border-radius: 5px;
     padding: 15px;
-    margin-bottom: 10px; /* Margen entre ramos */
+    margin-bottom: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    min-height: 50px;
+    min-height: 60px;
     font-weight: bold;
-    color: #388e3c; /* Verde más oscuro para el texto del ramo */
-    white-space: normal; /* Permite que el texto del ramo se envuelva en varias líneas */
-    flex-grow: 1; /* Permite que los ramos crezcan para llenar el espacio vertical si es necesario */
+    color: #333; /* Texto oscuro para contraste */
+    white-space: normal;
+    flex-grow: 1;
+    flex-shrink: 0;
 }
 
 .course:last-child {
-    margin-bottom: 0; /* Elimina el margen inferior del último ramo en un semestre */
+    margin-bottom: 0;
 }
 
 .course:hover {
-    background-color: #dcedc8; /* Verde un poco más intenso al pasar el mouse */
-    border-color: #a5d6a7;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Nuevo estilo para ramos bloqueados */
-.course.locked {
-    background-color: #f5f5f5; /* Un gris muy claro */
-    border-color: #e0e0e0; /* Borde gris claro */
-    color: #a0a0a0; /* Texto gris más claro */
-    cursor: not-allowed; /* Indica que no se puede hacer clic */
-    opacity: 0.6; /* Un poco de transparencia */
-}
-
-.course.locked:hover {
-    background-color: #f5f5f5; /* No cambia al pasar el mouse si está bloqueado */
-    border-color: #e0e0e0;
-    box-shadow: none; /* Sin sombra al pasar el mouse */
+    background-color: #FFCB61; /* Se mantiene el color base */
+    border-color: #FF894F; /* Borde un poco más intenso al pasar el mouse */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada al pasar el mouse */
 }
 
 .course.completed {
-    background-color: #a5d6a7; /* Verde más intenso para completado */
-    border-color: #4caf50; /* Verde aún más intenso */
-    color: #1b5e20; /* Verde oscuro para el texto completado */
+    background-color: #FF894F; /* Naranja Más Intenso para completado */
+    border-color: #FF894F; /* Borde del mismo color */
+    color: white; /* Texto blanco para alto contraste */
     text-decoration: line-through;
-    opacity: 0.9;
+    opacity: 1; /* Sin transparencia */
 }
 
 .course.completed::after {
     content: ' ✓';
-    color: #4caf50;
+    color: white; /* Checkmark blanco para contraste */
     font-weight: bold;
     margin-left: 8px;
+}
+
+/* Estilo para ramos bloqueados */
+.course.locked {
+    background-color: #f5f5f5; /* Un gris muy claro */
+    border-color: #e0e0e0; /* Borde gris claro */
+    color: #a0a0a0; /* Texto gris más claro */
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.course.locked:hover {
+    background-color: #f5f5f5;
+    border-color: #e0e0e0;
+    box-shadow: none;
 }
 
 #resetButton {
@@ -131,7 +132,7 @@ p {
     width: auto;
     margin: 40px auto 0 auto;
     padding: 12px 25px;
-    background-color: #d32f2f; /* Rojo más sobrio para el botón de reset */
+    background-color: #EA5B6F; /* Rojo Coral/Rosa Intenso para el botón de reset */
     color: white;
     border: none;
     border-radius: 5px;
@@ -141,22 +142,20 @@ p {
 }
 
 #resetButton:hover {
-    background-color: #c62828;
+    background-color: #d34a5d; /* Tono ligeramente más oscuro al pasar el mouse */
     transform: translateY(-2px);
 }
 
-/* --- ESTILOS RESPONSIVOS PARA PANTALLAS PEQUEÑAS --- */
+/* --- ESTILOS RESPONSIVOS --- */
 @media (max-width: 1200px) {
-    /* Para pantallas más pequeñas, ajustamos el tamaño mínimo de las columnas */
     .malla-grid-container {
-        grid-template-columns: repeat(10, minmax(200px, 1fr)); /* Reduce el min-width */
+        grid-template-columns: repeat(10, minmax(200px, 1fr));
     }
 }
 
 @media (max-width: 992px) {
-    /* En tablets, hacemos que se muestren menos semestres por fila y el resto se haga scroll */
     .malla-grid-container {
-        grid-template-columns: repeat(10, minmax(180px, 1fr)); /* Reduce aún más el min-width */
+        grid-template-columns: repeat(10, minmax(180px, 1fr));
     }
     .container {
         padding: 20px;
@@ -164,22 +163,22 @@ p {
 }
 
 @media (max-width: 768px) {
-    /* En móviles o pantallas pequeñas, volvemos a la disposición vertical */
     .container {
         padding: 15px;
-        overflow-x: hidden; /* Ocultamos el scroll horizontal en vertical */
-        white-space: normal; /* Permitimos que el texto se envuelva */
+        overflow-x: hidden;
+        white-space: normal;
     }
     .malla-grid-container {
-        display: block; /* Volvemos a un display de bloque normal para los semestres */
-        grid-template-columns: 1fr; /* Una columna para que vuelvan a apilarse */
-        gap: 0; /* Sin gap */
-        min-width: auto; /* Sin min-width */
+        display: block;
+        grid-template-columns: 1fr;
+        gap: 0;
+        min-width: auto;
         padding-bottom: 0;
     }
     .semester {
-        margin-bottom: 30px; /* Margen entre semestres apilados */
-        flex-shrink: 1; /* Permite que los semestres se encojan de nuevo */
+        margin-bottom: 30px;
+        flex-shrink: 1;
+        height: auto;
     }
     .semester:last-child {
         margin-bottom: 0;
@@ -207,6 +206,7 @@ p {
     }
     .course {
         padding: 10px;
+        min-height: 50px;
         font-size: 0.9em;
     }
     #resetButton {
