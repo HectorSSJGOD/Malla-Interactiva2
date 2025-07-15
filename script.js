@@ -6,24 +6,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let completedCourses = new Set();
 
+    // --- FUNCIÓN PARA APLICAR ESTILOS DE SCROLL DINÁMICAMENTE ---
+    function applyMobileScrollStyles() {
+        if (scrollContainer) {
+            if (window.innerWidth <= 768) {
+                // Forzamos los estilos para scroll vertical en móvil
+                scrollContainer.style.overflowX = 'hidden';
+                scrollContainer.style.overflowY = 'auto';
+                // Puedes ajustar el max-height aquí si es necesario, por ejemplo:
+                // scrollContainer.style.maxHeight = 'calc(100vh - 30px)'; // Asegúrate de que 30px es el padding total del container
+                // O simplemente darle una altura para que el contenido desborde
+                // scrollContainer.style.height = '100%'; // Esto podría funcionar si el flex del body lo permite
+            } else {
+                // Restauramos los estilos de desktop
+                scrollContainer.style.overflowX = 'auto';
+                scrollContainer.style.overflowY = 'hidden';
+                // scrollContainer.style.maxHeight = 'none'; // Quitar max-height fijo
+                // scrollContainer.style.height = 'auto'; // O restaurar a auto
+            }
+        }
+    }
+    // --- FIN FUNCIÓN PARA APLICAR ESTILOS ---
+
+
     function isCourseCompleted(courseId) {
         return completedCourses.has(courseId);
     }
 
-    // Función para verificar si un ramo está desbloqueado (todos sus prerrequisitos están completos)
     function isCourseUnlocked(courseElement) {
         const prerequisitesAttr = courseElement.dataset.prerequisites;
         if (!prerequisitesAttr) {
-            return true; // No tiene prerrequisitos, siempre está desbloqueado
+            return true;
         }
         const prerequisites = prerequisitesAttr.split(',').map(id => id.trim());
         return prerequisites.every(prereqId => isCourseCompleted(prereqId));
     }
 
-    // Función para verificar si un SEMESTRE ha sido completamente aprobado
     function isSemesterFullyCompleted(semesterElement) {
         const semesterCourses = semesterElement.querySelectorAll('.course');
-        // Un semestre está completado si TODOS sus ramos están en el Set de completedCourses
         return Array.from(semesterCourses).every(course => isCourseCompleted(course.dataset.courseId));
     }
 
@@ -34,35 +54,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 courseElement.classList.remove('completed');
             }
         } else {
-            // Si está bloqueado, asegúrate de que no esté marcado como completado y añade la clase 'locked'
             if (isCourseCompleted(courseElement.dataset.courseId)) {
                 courseElement.classList.remove('completed');
-                saveCourseState(courseElement.dataset.courseId, false); // Quitar de localStorage
+                saveCourseState(courseElement.dataset.courseId, false);
             }
             courseElement.classList.add('locked');
         }
     }
 
-    // Función para desplazar la malla horizontalmente
     function scrollToCurrentProgress() {
-        // En móviles, el scroll es vertical y no necesitamos desplazamiento automático horizontal
         if (window.innerWidth <= 768) { 
-            return;
+            return; // No scroll horizontal en móvil
         }
 
         if (!scrollContainer) return;
 
         let lastFullyCompletedSemesterIndex = -1;
 
-        // Iteramos para encontrar el índice del último semestre *completamente* aprobado
         semesters.forEach((semester, index) => {
-            if (isSemesterFullyCompleted(semester)) { // Usamos la nueva función
+            if (isSemesterFullyCompleted(semester)) {
                 lastFullyCompletedSemesterIndex = index;
             }
         });
 
-        // Solo desplazamos si hay un semestre completamente aprobado y no es el último de la lista.
-        // El objetivo es el semestre SIGUIENTE al último completado.
         if (lastFullyCompletedSemesterIndex > -1 && lastFullyCompletedSemesterIndex < semesters.length - 1) {
             const targetSemester = semesters[lastFullyCompletedSemesterIndex + 1]; 
             
@@ -78,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 behavior: 'smooth'
             });
         } else if (lastFullyCompletedSemesterIndex === -1 && scrollContainer.scrollLeft > 0) {
-            // Si no hay semestres completamente aprobados (o se resetearon), volvemos al inicio si no estamos ya allí
             scrollContainer.scrollTo({
                 left: 0,
                 behavior: 'smooth'
@@ -86,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Función principal para actualizar todos los estados de los ramos
     function updateAllCourseStates(resetting = false) {
         completedCourses.clear();
         courses.forEach(course => {
@@ -107,12 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCourseVisualState(course);
         });
 
-        // Llamamos a la función de desplazamiento después de actualizar todos los estados
-        // Se ejecutará solo si la condición de semestre completo se cumple dentro de ella.
         scrollToCurrentProgress(); 
     }
 
-    // Función para guardar el estado de un ramo en localStorage
     function saveCourseState(courseId, isCompleted) {
         if (isCompleted) {
             localStorage.setItem(courseId, 'completed');
@@ -124,10 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAllCourseStates();
     }
 
-    // Event listeners
     courses.forEach(course => {
-        course.addEventListener('click', (event) => { // Añadimos 'event' aquí
-            const clickedCourse = event.target.closest('.course'); // Nos aseguramos de obtener el elemento .course
+        course.addEventListener('click', (event) => { 
+            const clickedCourse = event.target.closest('.course'); 
             if (!clickedCourse.classList.contains('locked')) {
                 const isCompleted = clickedCourse.classList.toggle('completed');
                 saveCourseState(clickedCourse.dataset.courseId, isCompleted);
@@ -144,6 +152,13 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('¡Malla restablecida! Todos los ramos han sido desmarcados y bloqueados según sus prerrequisitos.');
         }
     });
+
+    // --- CÓDIGO NUEVO PARA APLICAR ESTILOS AL CARGAR Y REDIMENSIONAR ---
+    // Aplica los estilos al cargar la página
+    applyMobileScrollStyles(); 
+    // Vuelve a aplicar los estilos si la ventana se redimensiona (ej. girar el teléfono)
+    window.addEventListener('resize', applyMobileScrollStyles);
+    // --- FIN CÓDIGO NUEVO ---
 
     // Cargar los estados iniciales y desplazar al cargar la página
     updateAllCourseStates();
