@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #e0e0e0; /* Fondo general similar al anterior */
+    background-color: #e0e0e0;
     color: #333;
     display: flex;
     justify-content: center;
@@ -20,12 +20,12 @@ body {
     box-sizing: border-box;
     /* Por defecto, scroll horizontal para pantallas grandes */
     overflow-x: auto; 
-    overflow-y: hidden; /* Oculta el scroll vertical por defecto */
+    overflow-y: hidden; /* Oculta el scroll vertical por defecto en desktop */
     white-space: nowrap; /* Evita que los semestres se rompan a la siguiente línea en desktop */
 }
 
 h1, p {
-    color: #77BEF0; /* Azul Claro Vibrante para títulos principales */
+    color: #77BEF0;
     text-align: center;
     margin-bottom: 20px;
     white-space: normal; /* Asegura que el texto largo se envuelva siempre */
@@ -42,7 +42,7 @@ p {
     grid-template-columns: repeat(10, minmax(220px, 1fr)); 
     gap: 20px;
     padding-bottom: 20px;
-    min-width: fit-content; /* Asegura que el contenedor de la malla sea tan ancho como sus columnas */
+    min-width: fit-content;
     align-items: start;
     scroll-behavior: smooth;
     white-space: nowrap; /* Mantiene los elementos del grid en una sola línea */
@@ -51,28 +51,28 @@ p {
 .semester {
     margin-bottom: 0;
     padding: 20px;
-    border: 1px solid #77BEF0; /* Borde con Azul Claro Vibrante */
+    border: 1px solid #77BEF0;
     border-radius: 6px;
-    background-color: rgba(119, 190, 240, 0.1); /* Fondo muy suave del azul vibrante */
+    background-color: rgba(119, 190, 240, 0.1);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    height: 100%; /* Asegura que cada columna de semestre ocupe la altura completa de su fila de grid */
+    height: 100%;
 }
 
 .semester h2 {
-    color: #77BEF0; /* Azul Claro Vibrante para el título del semestre */
+    color: #77BEF0;
     margin-top: 0;
     margin-bottom: 25px;
-    border-bottom: 2px solid rgba(119, 190, 240, 0.5); /* Borde inferior más suave */
+    border-bottom: 2px solid rgba(119, 190, 240, 0.5);
     padding-bottom: 10px;
     text-align: center;
     white-space: normal;
 }
 
 .course {
-    background-color: #FFCB61; /* Naranja Suave/Amarillo Cálido como base */
-    border: 1px solid #FFCB61; /* Borde del mismo color */
+    background-color: #FFCB61;
+    border: 1px solid #FFCB61;
     border-radius: 5px;
     padding: 15px;
     margin-bottom: 10px;
@@ -84,8 +84,8 @@ p {
     text-align: center;
     min-height: 60px;
     font-weight: bold;
-    color: #333; /* Texto oscuro para contraste */
-    white-space: normal; /* Permite que el texto del ramo se envuelva en varias líneas */
+    color: #333;
+    white-space: normal;
     flex-grow: 1;
     flex-shrink: 0;
 }
@@ -95,27 +95,26 @@ p {
 }
 
 .course:hover {
-    background-color: #FFCB61; /* Se mantiene el color base */
-    border-color: #FF894F; /* Borde un poco más intenso al pasar el mouse */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada al pasar el mouse */
+    background-color: #FFCB61;
+    border-color: #FF894F;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .course.completed {
-    background-color: #FF894F; /* Naranja Más Intenso para completado */
-    border-color: #FF894F; /* Borde del mismo color */
-    color: white; /* Texto blanco para alto contraste */
+    background-color: #FF894F;
+    border-color: #FF894F;
+    color: white;
     text-decoration: line-through;
     opacity: 1;
 }
 
 .course.completed::after {
     content: ' ✓';
-    color: white; /* Checkmark blanco para contraste */
+    color: white;
     font-weight: bold;
     margin-left: 8px;
 }
 
-/* Estilo para ramos bloqueados */
 .course.locked {
     background-color: #f5f5f5;
     border-color: #e0e0e0;
@@ -135,7 +134,7 @@ p {
     width: auto;
     margin: 40px auto 0 auto;
     padding: 12px 25px;
-    background-color: #EA5B6F; /* Rojo Coral/Rosa Intenso para el botón de reset */
+    background-color: #EA5B6F;
     color: white;
     border: none;
     border-radius: 5px;
@@ -145,7 +144,7 @@ p {
 }
 
 #resetButton:hover {
-    background-color: #d34a5d; /* Tono ligeramente más oscuro al pasar el mouse */
+    background-color: #d34a5d;
     transform: translateY(-2px);
 }
 
@@ -173,8 +172,12 @@ p {
         padding: 15px;
         overflow-x: hidden; /* OCULTA el scroll horizontal en móviles */
         overflow-y: auto;   /* HABILITA el scroll vertical en móviles */
-        white-space: normal; /* Permite que el texto se envuelva */
-        max-height: 90vh; /* Opcional: limita la altura del contenedor para que quepa en la pantalla del móvil */
+        white-space: normal; /* Permite que el texto se envuelva y el contenido se apile verticalmente */
+        
+        /* AÑADIDO / MODIFICADO: Esto es CRUCIAL para el scroll vertical */
+        height: auto; /* Permite que el contenedor se expanda en altura en móviles */
+        max-height: 90vh; /* Limita la altura visible del contenedor para forzar el scroll interno.
+                           Ajusta este valor si tu contenido se ve cortado o no hay scroll suficiente. */
     }
 
     .malla-grid-container {
