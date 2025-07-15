@@ -1,19 +1,22 @@
+/* REVISADO: Estas reglas deben ir al inicio para html y body */
 html, body {
     height: 100%; /* Asegura que html y body ocupen toda la altura de la ventana */
     margin: 0;
     padding: 0;
-    /* Eliminamos 'overflow: hidden;' de html, body para que no interfiera */
+    /* No hay overflow: hidden; aquí. Permitimos que el scroll principal exista si es necesario. */
 }
 
 body {
     font-family: Arial, sans-serif;
-    padding: 20px; 
+    padding: 20px; /* Padding general del body para desktop */
     background-color: #e0e0e0;
     color: #333;
     display: flex; /* Mantener flexbox para centrar en desktop */
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh; /* Asegura que body ocupe al menos la altura de la ventana */
+    overflow-x: hidden; /* Oculta cualquier scroll horizontal indeseado en el body */
+    overflow-y: auto; /* Permitimos que el body tenga scroll vertical si es necesario */
 }
 
 .container {
@@ -24,8 +27,8 @@ body {
     max-width: 100%;
     width: 100%;
     box-sizing: border-box;
-    overflow-x: auto; 
-    overflow-y: hidden; /* Oculta el scroll vertical por defecto en desktop */
+    overflow-x: auto; /* Scroll horizontal para desktop */
+    overflow-y: hidden; /* Oculta scroll vertical para desktop */
     white-space: nowrap; /* Evita que los semestres se rompan a la siguiente línea en desktop */
 }
 
@@ -173,23 +176,21 @@ p {
 /* Pantallas de móviles (768px y abajo) */
 @media (max-width: 768px) {
     body {
-        padding: 10px; /* Restauramos un poco de padding al body en móvil */
-        display: block; /* Para que el body tenga comportamiento de bloque */
-        min-height: auto; /* Permite que el body se adapte al contenido */
-        /* Eliminamos overflow-y: auto del body. Dejaremos que el .container lo maneje. */
+        padding: 10px; /* Padding para el body en móvil */
+        display: block; /* ¡CRUCIAL! Desactivar flexbox en el body para móvil */
+        min-height: auto; /* Permitir que el body se adapte a su contenido */
+        overflow-y: hidden; /* Oculta el scroll del body. TODO el scroll es del .container */
     }
 
     .container {
         padding: 15px;
-        overflow-x: hidden; /* Oculta el scroll horizontal en móviles */
+        overflow-x: hidden; /* OCULTA el scroll horizontal en móviles */
         overflow-y: auto;   /* HABILITA el scroll vertical en móviles */
         white-space: normal; /* Permite que el texto se envuelva y el contenido se apile verticalmente */
         height: auto; /* Permite que el contenedor crezca en altura para su contenido */
-        max-height: calc(100vh - 40px); /* ¡CRUCIAL! Limita la altura del contenedor.
-                                         calc(100vh - 40px) = 100% de la altura de la ventana menos el padding total del body (20px arriba + 20px abajo).
-                                         Ajusta '40px' si tienes más o menos padding en el body.
-                                         Esto fuerza que el .container tenga un desbordamiento interno. */
-        margin: 0 auto; /* Centra el contenedor si hay espacio lateral */
+        /* Eliminamos max-height: calc(100vh - XXpx) para dejar que el .container crezca si es necesario */
+        max-height: 100vh; /* ¡CRUCIAL! Limita la altura del contenedor para forzar scroll interno */
+        margin: 0 auto; /* Centra el contenedor */
     }
 
     .malla-grid-container {
@@ -219,11 +220,11 @@ p {
 
 @media (max-width: 480px) {
     body {
-        padding: 5px; /* Reducimos padding para pantallas muy pequeñas */
+        padding: 5px;
     }
     .container {
         padding: 10px;
-        max-height: calc(100vh - 20px); /* Ajuste de max-height por el padding del body */
+        max-height: calc(100vh - 20px); /* Un ajuste si el padding del body cambia */
     }
     h1 {
         font-size: 1.5em;
