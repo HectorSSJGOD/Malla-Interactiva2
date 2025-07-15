@@ -29,13 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
             courseElement.classList.remove('locked');
             // Si estaba bloqueado y ahora se desbloquea, pero no está marcado como completado, restauramos su estilo normal
             if (!isCourseCompleted(courseElement.dataset.courseId)) {
-                courseElement.style.removeProperty('background-color');
-                courseElement.style.removeProperty('border-color');
-                courseElement.style.removeProperty('color');
-                courseElement.style.removeProperty('opacity');
+                // Asegúrate de remover la clase 'completed' si el ramo no está en el Set de completados
+                courseElement.classList.remove('completed'); 
             }
         } else {
-            // Si está bloqueado, asegúrate de que no esté marcado como completado
+            // Si está bloqueado, asegúrate de que no esté marcado como completado y añade la clase 'locked'
             if (isCourseCompleted(courseElement.dataset.courseId)) {
                 courseElement.classList.remove('completed');
                 saveCourseState(courseElement.dataset.courseId, false); // Quitar de localStorage
@@ -64,7 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 course.classList.add('completed');
                 course.classList.remove('locked');
             } else {
-                // Si no está completado, decide si está bloqueado o desbloqueado
+                // Si no está completado, aseguramos que la clase 'completed' sea removida
+                course.classList.remove('completed'); 
+                // Y luego decidimos si está bloqueado o desbloqueado
                 updateCourseVisualState(course);
             }
         });
