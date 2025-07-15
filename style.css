@@ -1,21 +1,23 @@
-
-html {
-    height: 100%; /* html ocupa el 100% de la altura de la ventana */
+/* REGLAS GLOBALES IMPORTANTES PARA EL SCROLL */
+html, body {
+    height: 100%; /* Ocupan el 100% de la altura de la ventana */
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Oculta cualquier scroll en html */
+    /* Eliminamos overflow: hidden; de html, body para permitir scroll vertical en PC */
 }
 
 body {
-    height: 100%; /* body ocupa el 100% de la altura de html */
-    margin: 0;
+    font-family: Arial, sans-serif;
     padding: 20px; /* Padding global del body para desktop */
     background-color: #e0e0e0;
     color: #333;
     display: flex; /* Mantenemos flex para centrar el .container en desktop */
     justify-content: center;
     align-items: flex-start; /* Alinea al inicio si el contenido es más pequeño */
-    overflow: hidden; /* Oculta cualquier scroll en el body también */
+    
+    /* ¡AJUSTE CLAVE AQUÍ PARA EL SCROLL VERTICAL EN PC! */
+    overflow-x: hidden; /* Oculta scroll horizontal del body para que lo maneje .container */
+    overflow-y: auto;   /* ¡CRÍTICO! HABILITA el scroll vertical en el body para PC */
 }
 
 .container {
@@ -28,13 +30,13 @@ body {
     box-sizing: border-box;
 
     /* REGLAS CLAVE PARA EL SCROLL EN DESKTOP */
-    overflow-x: auto; /* Permite scroll horizontal */
-    overflow-y: hidden; /* Oculta scroll vertical en desktop */
+    overflow-x: auto; /* ¡CRÍTICO! Permite scroll horizontal de la malla en desktop */
+    overflow-y: hidden; /* Oculta scroll vertical del .container para evitar doble barra en PC */
     white-space: nowrap; /* Evita que los semestres se rompan a la siguiente línea en desktop */
     
     /* ALTURA PARA DESKTOP */
-    /* La altura aquí se calculará por flexbox, ocupando el espacio disponible */
-    /* Lo importante es que el contenido desborde en móvil */
+    height: auto; /* Permite que el contenedor se ajuste a su contenido verticalmente */
+    max-height: none; /* Asegura que no haya límite de altura en desktop */
 }
 
 h1, p {
@@ -162,8 +164,6 @@ p {
 
 /* --- ESTILOS RESPONSIVOS --- */
 
-/* ... (Todo tu CSS anterior permanece igual hasta las media queries) ... */
-
 /* Pantallas grandes y medianas (desktop y tablets grandes en horizontal) */
 @media (max-width: 1200px) {
     .malla-grid-container {
@@ -182,27 +182,39 @@ p {
 
 /* Pantallas de móviles (768px y abajo) */
 @media (max-width: 768px) {
+    /* Aquí es donde manejamos el scroll para móvil */
+    html, body { /* En móviles, html/body pueden volver a ser auto scrollable */
+        overflow: auto; 
+    }
+
     body {
-        padding: 0;
-        display: block;
+        padding: 10px; /* Restauramos el padding para el body en móvil */
+        display: block; /* Vuelve a un display de bloque normal para el body */
         min-height: auto;
-        overflow-y: hidden;
+        overflow-y: auto; /* ¡Permitimos scroll vertical en body para móviles! */
+        overflow-x: hidden; /* Ocultamos el horizontal del body en móvil */
     }
 
     .container {
-        padding: 15px;
-        overflow-x: hidden;
-        overflow-y: auto;
-        white-space: normal;
-        max-height: 100vh; /* Se mantiene la altura máxima para forzar el scroll */
-        margin: 0 auto;
-        width: 100%;
-        border-radius: 0;
-        box-shadow: none;
+        padding: 15px; /* Padding interno del contenedor para móvil */
+        overflow-x: hidden; /* OCULTA el scroll horizontal en móviles */
+        overflow-y: hidden;   /* ¡IMPORTANTE! Ocultamos el scroll vertical del .container en móvil.
+                                   Ahora que el body hará el scroll, el container no necesita su propia barra. */
+        white-space: normal; /* Permite que el texto se envuelva y el contenido se apile verticalmente */
+        
+        /* Eliminamos max-height o height fijos para el .container en móvil. 
+           Dejamos que crezca libremente y el body haga el scroll. */
+        height: auto; 
+        max-height: none; 
+
+        margin: 0 auto; /* Centra el contenedor */
+        width: 100%; /* Asegura que ocupe todo el ancho */
+        border-radius: 8px; /* Restauramos un poco los bordes */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Restauramos la sombra */
     }
 
     .malla-grid-container {
-        display: block;
+        display: block; /* Vuelve a un display de bloque normal para los semestres */
         grid-template-columns: 1fr;
         gap: 0;
         min-width: auto;
@@ -225,23 +237,21 @@ p {
         font-size: 1.4em;
     }
     
-    /* AJUSTE CLAVE AQUÍ PARA EL BOTÓN DE RESET */
+    /* AJUSTE PARA EL BOTÓN DE RESET EN MÓVIL */
     #resetButton {
-        margin-top: 30px; /* Reducir el margen superior si es muy grande */
-        margin-bottom: 80px; /* ¡AUMENTAR ESTE MARGEN para separarlo de la barra del navegador! */
-        padding: 12px 25px; /* Mantener padding */
-        font-size: 1em; /* Mantener tamaño de fuente */
-        /* Asegurarse de que display: block y width: auto sigan activos de las reglas generales */
+        margin-top: 30px;
+        margin-bottom: 80px; /* Margen para evitar barra de navegador */
+        padding: 12px 25px;
+        font-size: 1em;
     }
 }
 
 @media (max-width: 480px) {
     body {
-        padding: 0;
+        padding: 5px; 
     }
     .container {
         padding: 10px;
-        max-height: 100vh;
     }
     h1 {
         font-size: 1.5em;
@@ -254,8 +264,7 @@ p {
         min-height: 50px;
         font-size: 0.9em;
     }
-    /* AJUSTE ADICIONAL PARA PANTALLAS MÁS PEQUEÑAS AÚN */
     #resetButton {
-        margin-bottom: 80px; /* Mantener o ajustar si es necesario para pantallas ultrapequeñas */
+        margin-bottom: 80px; 
     }
 }
