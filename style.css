@@ -1,13 +1,19 @@
+html, body {
+    height: 100%; /* Asegura que html y body ocupen toda la altura de la ventana */
+    margin: 0;
+    padding: 0;
+    /* Eliminamos 'overflow: hidden;' de html, body para que no interfiera */
+}
+
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
+    padding: 20px; 
     background-color: #e0e0e0;
     color: #333;
-    display: flex;
+    display: flex; /* Mantener flexbox para centrar en desktop */
     justify-content: center;
     align-items: flex-start;
-    min-height: 100vh;
+    min-height: 100vh; /* Asegura que body ocupe al menos la altura de la ventana */
 }
 
 .container {
@@ -18,7 +24,6 @@ body {
     max-width: 100%;
     width: 100%;
     box-sizing: border-box;
-    /* Por defecto, scroll horizontal para pantallas grandes */
     overflow-x: auto; 
     overflow-y: hidden; /* Oculta el scroll vertical por defecto en desktop */
     white-space: nowrap; /* Evita que los semestres se rompan a la siguiente línea en desktop */
@@ -28,7 +33,7 @@ h1, p {
     color: #77BEF0;
     text-align: center;
     margin-bottom: 20px;
-    white-space: normal; /* Asegura que el texto largo se envuelva siempre */
+    white-space: normal; 
 }
 
 p {
@@ -36,7 +41,6 @@ p {
     color: #555;
 }
 
-/* Estilos para el contenedor de la malla horizontal (para pantallas grandes) */
 .malla-grid-container {
     display: grid;
     grid-template-columns: repeat(10, minmax(220px, 1fr)); 
@@ -45,7 +49,7 @@ p {
     min-width: fit-content;
     align-items: start;
     scroll-behavior: smooth;
-    white-space: nowrap; /* Mantiene los elementos del grid en una sola línea */
+    white-space: nowrap;
 }
 
 .semester {
@@ -168,31 +172,39 @@ p {
 
 /* Pantallas de móviles (768px y abajo) */
 @media (max-width: 768px) {
+    body {
+        padding: 10px; /* Restauramos un poco de padding al body en móvil */
+        display: block; /* Para que el body tenga comportamiento de bloque */
+        min-height: auto; /* Permite que el body se adapte al contenido */
+        /* Eliminamos overflow-y: auto del body. Dejaremos que el .container lo maneje. */
+    }
+
     .container {
         padding: 15px;
-        overflow-x: hidden; /* OCULTA el scroll horizontal en móviles */
+        overflow-x: hidden; /* Oculta el scroll horizontal en móviles */
         overflow-y: auto;   /* HABILITA el scroll vertical en móviles */
         white-space: normal; /* Permite que el texto se envuelva y el contenido se apile verticalmente */
-        
-        /* AÑADIDO / MODIFICADO: Esto es CRUCIAL para el scroll vertical */
-        height: auto; /* Permite que el contenedor se expanda en altura en móviles */
-        max-height: 90vh; /* Limita la altura visible del contenedor para forzar el scroll interno.
-                           Ajusta este valor si tu contenido se ve cortado o no hay scroll suficiente. */
+        height: auto; /* Permite que el contenedor crezca en altura para su contenido */
+        max-height: calc(100vh - 40px); /* ¡CRUCIAL! Limita la altura del contenedor.
+                                         calc(100vh - 40px) = 100% de la altura de la ventana menos el padding total del body (20px arriba + 20px abajo).
+                                         Ajusta '40px' si tienes más o menos padding en el body.
+                                         Esto fuerza que el .container tenga un desbordamiento interno. */
+        margin: 0 auto; /* Centra el contenedor si hay espacio lateral */
     }
 
     .malla-grid-container {
         display: block; /* Vuelve a un display de bloque normal para los semestres */
-        grid-template-columns: 1fr; /* Una columna para que vuelvan a apilarse */
-        gap: 0; /* Sin gap entre semestres cuando están apilados */
-        min-width: auto; /* Sin min-width cuando no es grid horizontal */
+        grid-template-columns: 1fr;
+        gap: 0;
+        min-width: auto;
         padding-bottom: 0;
-        white-space: normal; /* Permite que los semestres se envuelvan */
+        white-space: normal;
     }
 
     .semester {
-        margin-bottom: 30px; /* Margen entre semestres apilados */
+        margin-bottom: 30px;
         flex-shrink: 1;
-        height: auto; /* Desactiva la altura fija para que se adapten al contenido */
+        height: auto;
     }
     .semester:last-child {
         margin-bottom: 0;
@@ -207,10 +219,11 @@ p {
 
 @media (max-width: 480px) {
     body {
-        padding: 10px;
+        padding: 5px; /* Reducimos padding para pantallas muy pequeñas */
     }
     .container {
         padding: 10px;
+        max-height: calc(100vh - 20px); /* Ajuste de max-height por el padding del body */
     }
     h1 {
         font-size: 1.5em;
