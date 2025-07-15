@@ -18,15 +18,17 @@ body {
     max-width: 100%;
     width: 100%;
     box-sizing: border-box;
-    overflow-x: auto; /* Permite scroll horizontal */
-    white-space: nowrap; /* Evita que los semestres se rompan a la siguiente línea */
+    /* Por defecto, scroll horizontal para pantallas grandes */
+    overflow-x: auto; 
+    overflow-y: hidden; /* Oculta el scroll vertical por defecto */
+    white-space: nowrap; /* Evita que los semestres se rompan a la siguiente línea en desktop */
 }
 
 h1, p {
     color: #77BEF0; /* Azul Claro Vibrante para títulos principales */
     text-align: center;
     margin-bottom: 20px;
-    white-space: normal;
+    white-space: normal; /* Asegura que el texto largo se envuelva siempre */
 }
 
 p {
@@ -34,15 +36,16 @@ p {
     color: #555;
 }
 
-/* Estilos para el contenedor de la malla horizontal */
+/* Estilos para el contenedor de la malla horizontal (para pantallas grandes) */
 .malla-grid-container {
     display: grid;
     grid-template-columns: repeat(10, minmax(220px, 1fr)); 
     gap: 20px;
     padding-bottom: 20px;
-    min-width: fit-content;
+    min-width: fit-content; /* Asegura que el contenedor de la malla sea tan ancho como sus columnas */
     align-items: start;
-    scroll-behavior: smooth; /* Para el desplazamiento suave */
+    scroll-behavior: smooth;
+    white-space: nowrap; /* Mantiene los elementos del grid en una sola línea */
 }
 
 .semester {
@@ -54,7 +57,7 @@ p {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    height: 100%;
+    height: 100%; /* Asegura que cada columna de semestre ocupe la altura completa de su fila de grid */
 }
 
 .semester h2 {
@@ -82,7 +85,7 @@ p {
     min-height: 60px;
     font-weight: bold;
     color: #333; /* Texto oscuro para contraste */
-    white-space: normal;
+    white-space: normal; /* Permite que el texto del ramo se envuelva en varias líneas */
     flex-grow: 1;
     flex-shrink: 0;
 }
@@ -102,7 +105,7 @@ p {
     border-color: #FF894F; /* Borde del mismo color */
     color: white; /* Texto blanco para alto contraste */
     text-decoration: line-through;
-    opacity: 1; /* Sin transparencia */
+    opacity: 1;
 }
 
 .course.completed::after {
@@ -114,9 +117,9 @@ p {
 
 /* Estilo para ramos bloqueados */
 .course.locked {
-    background-color: #f5f5f5; /* Un gris muy claro */
-    border-color: #e0e0e0; /* Borde gris claro */
-    color: #a0a0a0; /* Texto gris más claro */
+    background-color: #f5f5f5;
+    border-color: #e0e0e0;
+    color: #a0a0a0;
     cursor: not-allowed;
     opacity: 0.6;
 }
@@ -147,6 +150,8 @@ p {
 }
 
 /* --- ESTILOS RESPONSIVOS --- */
+
+/* Pantallas grandes y medianas (desktop y tablets grandes en horizontal) */
 @media (max-width: 1200px) {
     .malla-grid-container {
         grid-template-columns: repeat(10, minmax(200px, 1fr));
@@ -162,23 +167,29 @@ p {
     }
 }
 
+/* Pantallas de móviles (768px y abajo) */
 @media (max-width: 768px) {
     .container {
         padding: 15px;
-        overflow-x: hidden;
-        white-space: normal;
+        overflow-x: hidden; /* OCULTA el scroll horizontal en móviles */
+        overflow-y: auto;   /* HABILITA el scroll vertical en móviles */
+        white-space: normal; /* Permite que el texto se envuelva */
+        max-height: 90vh; /* Opcional: limita la altura del contenedor para que quepa en la pantalla del móvil */
     }
+
     .malla-grid-container {
-        display: block;
-        grid-template-columns: 1fr;
-        gap: 0;
-        min-width: auto;
+        display: block; /* Vuelve a un display de bloque normal para los semestres */
+        grid-template-columns: 1fr; /* Una columna para que vuelvan a apilarse */
+        gap: 0; /* Sin gap entre semestres cuando están apilados */
+        min-width: auto; /* Sin min-width cuando no es grid horizontal */
         padding-bottom: 0;
+        white-space: normal; /* Permite que los semestres se envuelvan */
     }
+
     .semester {
-        margin-bottom: 30px;
+        margin-bottom: 30px; /* Margen entre semestres apilados */
         flex-shrink: 1;
-        height: auto;
+        height: auto; /* Desactiva la altura fija para que se adapten al contenido */
     }
     .semester:last-child {
         margin-bottom: 0;
